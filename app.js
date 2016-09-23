@@ -4,10 +4,17 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var mongoosedb = require('mongoose');
 
 var appRoutes = require('./routes/app');
 
 var app = express();
+mongoosedb.connect('localhost:27017/toDoTaskSystem', function (err) {
+    if(err){
+        return console.error('Error in connection to the database');
+    }
+    console.log('Connect successfully to the database');
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
