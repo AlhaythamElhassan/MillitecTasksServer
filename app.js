@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 var mongoosedb = require('mongoose');
 
 var appRoutes = require('./routes/app');
-
+var usersRoutes = require('./routes/userRoutes');
 var app = express();
 mongoosedb.connect('localhost:27017/toDoTaskSystem', function (err) {
     if(err){
@@ -37,7 +37,7 @@ app.use(function (req, res, next) {
   res.setHeader('Access-Control-Allow-Methods', 'POST, GET, PATCH, DELETE');
   next();
 });
-
+app.use('/user', usersRoutes);
 app.use('/', appRoutes);
 
 // catch 404 and forward to error handler
