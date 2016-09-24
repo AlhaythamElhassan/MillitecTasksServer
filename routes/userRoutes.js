@@ -15,9 +15,8 @@ router.post('/login', function (req, res, next) {
             });
         }
         var token = jwt.sign({user: user}, 'tokenEncodingSecret');
-        res.status(200).json({
+        res.header('auth', token).json({
             message: 'Success',
-            token: token,
             userId: user.id,
             userRole: user.role
         });
@@ -26,6 +25,26 @@ router.post('/login', function (req, res, next) {
 /**
  * All upcoming routes require authentication and authorization
  */
+router.use('/', function (req, res, next) {
+    jwt.verify(req.get('auth'), 'tokenEncodingSecret', function (err, decoded) {
+        if(err) {
+            return res.status(404).json({
+                title: 'Authentication failed',
+                error: err
+            });
+        }
+        if(decoded.user.role !== 'admin') {
+            return res.status(401).json({
+                title: 'You are not authorized to access this route',
+                error: 'Only admin can access'
+            });
+        }
+        next();
+
+    });
+});
+
+
 router.post('/', function (req, res, next) {
     if(!req.body.firstName || !req.body.lastName || !req.body.password || !req.body.email || !req.body.role){
         return res.status(400).json({
