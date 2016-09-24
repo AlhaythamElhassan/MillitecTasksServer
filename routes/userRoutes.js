@@ -2,7 +2,7 @@ var express = require('express');
 var router= express.Router();
 var passwordHash = require('password-hash');
 var jwt = require('jsonwebtoken');
-
+var _ = require('underscore');
 var User = require('../models/user');
 
 router.post('/signin', function (req, res, next) {
@@ -38,20 +38,14 @@ router.post('/signin', function (req, res, next) {
  * All upcoming routes require authentication and authorization
  */
 router.post('/', function (req, res, next) {
-    if(!req.firstName || !req.lastName || !req.password || !req.email || !req.role){
+    if(!req.body.firstName || !req.body.lastName || !req.body.password || !req.body.email || !req.body.role){
         return res.status(400).json({
             error: 'Can not add user',
             message: 'User required field is missing'
         }).send();
     }
-    var user = new User({
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        password: passwordHash.generate(req.body.password),
-        email: req.body.email,
-        role: req.body.role
-    });
-    user.save(function (err, user) {
+    var newUser = _.pick(req.body, 'firstName', 'lastName', 'password', 'email', 'role');
+    User.create(newUser, function (err, user) {
         if (err) {
             return res.status(404).json({
                 title: 'user is not added due to an error please try again',
