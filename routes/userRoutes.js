@@ -5,6 +5,9 @@ var jwt = require('jsonwebtoken');
 var _ = require('underscore');
 var User = require('../models/user');
 
+/**
+ * Login route
+ */
 router.post('/login', function (req, res, next) {
     var body = _.pick(req.body, 'email', 'password');
     User.authenticate(body, function (err, user) {
@@ -44,7 +47,7 @@ router.use('/', function (req, res, next) {
     });
 });
 
-
+// Add users to the system
 router.post('/', function (req, res, next) {
     if(!req.body.firstName || !req.body.lastName || !req.body.password || !req.body.email || !req.body.role){
         return res.status(400).json({
@@ -67,4 +70,33 @@ router.post('/', function (req, res, next) {
     });
 });
 
+// Update user
+router.patch('/:id', function (req, res, next) {
+    if (!req.body.firstName || !req.body.lastName || !req.body.password || !req.body.email || !req.body.role) {
+        return res.status(400).json({
+            title: 'Can not update user',
+            error: {message: 'User required field is missing'}
+        }).send();
+    }
+    var userUpdates = _.pick(req.body, 'firstName', 'lastName', 'password', 'email', 'role');
+    userUpdates._id = req.params.id;
+    User.findByIdAndUpdate(req.params.id,userUpdates,{new : true}, function (err, user) {
+        if (err) {
+            return res.status(404).json({
+                title: 'An error occurred',
+                error: err
+            });
+        }
+        if(!user){
+            return res.status(404).json({
+                title: "An error occurred",
+                message:"user not found"
+            });
+        }
+        res.status(200).json({
+            message: 'success',
+            user: user
+        });
+    });
+});
 module.exports = router;
