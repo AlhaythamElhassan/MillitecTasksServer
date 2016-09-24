@@ -3,6 +3,7 @@ var Schema = mongoose.Schema;
 var mongooseUniqueValidator = require('mongoose-unique-validator');
 var bcrypt = require('bcrypt');
 var myValidator = require('validator');
+var jwt = require('jsonwebtoken');
 
 var schema = new Schema({
     firstName: {
@@ -56,5 +57,21 @@ schema.virtual('password').set(function(password){
     return this._password;
 });
 
+schema.statics.authenticate = function (requestBody, callback) {
+        if (!myValidator.isEmail(requestBody.email) || typeof requestBody.password !== 'string') {
+            callback(error, null);
+        }
+        this.findOne({email: requestBody.email}, function (err, user) {
+            if (err) {
+                error = new Error("Internal server error");
+                return callback (error, null);
+            }
+                if (!user || !bcrypt.compareSync(requestBody.password, user.get('hash_password'))) {
+                    error = new Error("Your email address or password is invalid. Please try again.");
+                    return callback (error, null);
+                }
+            callback(null, user);
+        });
+};
 var user = mongoose.model('User', schema);
 module.exports = user;

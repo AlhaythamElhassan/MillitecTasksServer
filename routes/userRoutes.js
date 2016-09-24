@@ -5,35 +5,24 @@ var jwt = require('jsonwebtoken');
 var _ = require('underscore');
 var User = require('../models/user');
 
-router.post('/signin', function (req, res, next) {
-    User.findOne({email: req.body.email}, function (err, user) {
-        if (err) { // an error occurred
-            return res.status(404).json({
-                title: 'An error occurred',
-                error: err
+router.post('/login', function (req, res, next) {
+    var body = _.pick(req.body, 'email', 'password');
+    User.authenticate(body, function (err, user) {
+        if (err) {
+            return res.status(401).json({
+                error: err,
+                message: err.message
             });
         }
-        if (!user) { // user not found
-            return res.status(404).json({
-                title: 'No user found',
-                error: {message: 'User not found'}
-            });
-        }
-        if (!passwordHash.verify(req.body.password, user.password)){
-            return res.status(404).json({
-                title: 'Could not sign you in',
-                error: {message: 'Invalid username or password'}
-            });
-        }
-        var token = jwt.sign({user: user}, 'tokenEncodingSecret', {expeiresIn: 7200}); // token will expired in 3 hrs
+        var token = jwt.sign({user: user}, 'tokenEncodingSecret');
         res.status(200).json({
             message: 'Success',
             token: token,
-            userId: user.id
-        }).send();
+            userId: user.id,
+            userRole: user.role
+        });
     });
 });
-
 /**
  * All upcoming routes require authentication and authorization
  */
