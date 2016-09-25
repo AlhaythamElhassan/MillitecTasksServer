@@ -120,4 +120,30 @@ router.get('/:email', function (req, res, next) {
        });
    });
 });
+//GET all users
+router.get('/users/all', function (req, res, next) {
+    User.find({}, function (err, users) {
+        if(err){
+            return res.status(500).json({
+                title: 'An error occurred',
+                error: err
+            });
+        }
+        if(!users) {
+            return res.status(404).json({
+                title: "An error occurred",
+                message: "no user found"
+            });
+        }
+        var _users = [];
+        users.forEach(function (user) {
+            var u = _.pick(user, 'firstName', '_id', 'email');
+            _users.push(u);
+        });
+        res.status(200).json({
+            Message: 'Success',
+            docs: _users
+        });
+    });
+});
 module.exports = router;
