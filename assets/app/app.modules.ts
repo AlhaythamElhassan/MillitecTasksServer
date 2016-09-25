@@ -7,10 +7,13 @@ import {AppComponent} from "./app.component";
 import {HeaderComponent} from "./headerComponent/header.componet";
 import {LocationStrategy, HashLocationStrategy} from "@angular/common";
 import {AuthenticationComponent} from "./authenticationComponent/authenticaiton.component";
+import {routing} from "./app.routing";
+
 
 @NgModule({
     imports:      [
-        BrowserModule
+        BrowserModule,
+        routing
     ],
     declarations: [
         AppComponent,
