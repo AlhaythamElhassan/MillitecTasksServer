@@ -4,6 +4,7 @@ import {CommonModule} from "@angular/common";
 import {authRouting} from "./auth.routing";
 import {AuthenticationComponent} from "./authenticationComponent/authenticaiton.component";
 import {SignUpComponent} from "./signUpComponent/signup.component";
+import {LogoutComponent} from "./logoutComponent/logout.component";
 
 @NgModule({
     imports: [
@@ -13,7 +14,8 @@ import {SignUpComponent} from "./signUpComponent/signup.component";
     declarations: [
         AuthenticationComponent,
         LoginComponent,
-        SignUpComponent
+        SignUpComponent,
+        LogoutComponent
     ],
     providers:[
 
