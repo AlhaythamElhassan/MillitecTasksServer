@@ -6,19 +6,21 @@ import { BrowserModule } from '@angular/platform-browser';
 import {AppComponent} from "./app.component";
 import {HeaderComponent} from "./headerComponent/header.componet";
 import {LocationStrategy, HashLocationStrategy} from "@angular/common";
-import {AuthenticationComponent} from "./authenticationComponent/authenticaiton.component";
 import {routing} from "./app.routing";
+import {TaskComponent} from "./tasks/taskComponent/task.component";
+import {AuthMoudule} from "./authentication/auth.moudle";
 
 
 @NgModule({
     imports:      [
         BrowserModule,
-        routing
+        routing,
+        AuthMoudule
     ],
     declarations: [
         AppComponent,
         HeaderComponent,
-        AuthenticationComponent
+        TaskComponent
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy}

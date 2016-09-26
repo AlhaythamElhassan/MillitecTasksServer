@@ -1,13 +1,11 @@
 import { ModuleWithProviders }  from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import {AuthenticationComponent} from "./authenticationComponent/authenticaiton.component";
-
-
+import {TaskComponent} from "./tasks/taskComponent/task.component";
 
 const appRoutes: Routes = [
     {
-        path: '',
-        component: AuthenticationComponent
+        path: 'task',
+        component: TaskComponent
     }
 ];
 
