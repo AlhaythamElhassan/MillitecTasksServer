@@ -61,6 +61,9 @@ gulp.task('vendor', function () {
     //third party rxjs
     gulp.src('node_modules/rxjs/**')
         .pipe(gulp.dest(vendor + '/rxjs'));
+    //third party rxjs
+    gulp.src('node_modules/bootstrap/**')
+        .pipe(gulp.dest(vendor + '/bootstrap'));
 });
 
 // watch for changes
