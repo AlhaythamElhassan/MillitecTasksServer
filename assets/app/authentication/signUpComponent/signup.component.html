@@ -30,6 +30,6 @@
             <label for="password">Password</label>
             <input   type="password" id="password" [(ngModel)]="model.password" required name="password" class="form-control">
         </div>
-        <button type="submit" class="btn btn-primary" [disabled]="!signupForm.form.valid">Sign Up</button>
+        <button type="submit" class="btn btn-primary" [disabled]="!signupForm.form.valid || !signupForm.form.dirty">Sign Up</button>
     </form>
 </section>

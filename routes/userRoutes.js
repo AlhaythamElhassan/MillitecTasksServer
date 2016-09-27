@@ -18,10 +18,11 @@ router.post('/login', function (req, res, next) {
             });
         }
         var token = jwt.sign({user: user}, 'tokenEncodingSecret');
-        res.header('auth', token).json({
+        res.status(200).json({
             message: 'Success',
-            userId: user.id,
-            userRole: user.role
+            token: token,
+            user: user._id,
+            role: user.role
         });
     });
 });
@@ -29,22 +30,25 @@ router.post('/login', function (req, res, next) {
  * All upcoming routes require authentication and authorization
  */
 router.use('/', function (req, res, next) {
-    jwt.verify(req.get('auth'), 'tokenEncodingSecret', function (err, decoded) {
-        if(err) {
-            return res.status(404).json({
-                title: 'Authentication failed',
-                error: err
-            });
-        }
-        if(decoded.user.role !== 'admin') {
-            return res.status(401).json({
-                title: 'You are not authorized to access this route',
-                error: 'Only admin can access'
-            });
-        }
-        next();
-
-    });
+    //to be able to add first system admin user
+    if(req.body.byPass !== 'mySpecialAdminLogin') {
+        return next();
+    }
+        jwt.verify(req.get('auth'), 'tokenEncodingSecret', function (err, decoded) {
+            if (err) {
+                return res.status(404).json({
+                    title: 'Authentication failed',
+                    error: err
+                });
+            }
+            if (decoded.user.role !== 'admin') {
+                return res.status(401).json({
+                    title: 'You are not authorized to access this route',
+                    error: 'Only admin can access'
+                });
+            }
+            next();
+        });
 });
 
 // Add users to the system
@@ -58,15 +62,16 @@ router.post('/', function (req, res, next) {
     var newUser = _.pick(req.body, 'firstName', 'lastName', 'password', 'email', 'role');
     User.create(newUser, function (err, user) {
         if (err) {
-            return res.status(404).json({
+            return res.status(500).json({
                 title: 'user is not added due to an error please try again',
                 error: err
             });
+        } else {
+            res.status(200).json({
+                message: 'User added successfully',
+                obj: user
+            });
         }
-        res.status(201).json({
-            message: 'User added successfully',
-            obj: user
-        }).send();
     });
 });
 

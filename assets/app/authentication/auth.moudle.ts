@@ -6,10 +6,13 @@ import {AuthenticationComponent} from "./authenticationComponent/authenticaiton.
 import {SignUpComponent} from "./signUpComponent/signup.component";
 import {LogoutComponent} from "./logoutComponent/logout.component";
 import {FormsModule} from "@angular/forms";
+import {AuthService} from "./auth.service";
+import {HttpModule} from "@angular/http";
 
 @NgModule({
     imports: [
         CommonModule,
+        HttpModule,
         FormsModule,
         authRouting,
     ],
@@ -20,7 +23,7 @@ import {FormsModule} from "@angular/forms";
         LogoutComponent
     ],
     providers:[
-
+        AuthService
     ]
 })
 export class AuthMoudule{}

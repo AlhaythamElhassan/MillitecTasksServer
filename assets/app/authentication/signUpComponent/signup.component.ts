@@ -1,5 +1,6 @@
 import {Component, Injectable, OnInit} from "@angular/core";
 import {User} from "../user.model";
+import {AuthService} from "../auth.service";
 @Component({
     moduleId: module.id,
     selector: 'my-signup',
@@ -7,18 +8,20 @@ import {User} from "../user.model";
 })
 @Injectable()
 export class SignUpComponent implements OnInit {
+    constructor(private _authService: AuthService){}
     model: User;
     active = true;
     roles = ['admin', 'operator', 'manager'];
     OnSubmit() {
-        console.log(JSON.stringify(this.model));
-        this.model = new User(null, null)
+        this._authService.signup(this.model)
+            .subscribe(
+                data => console.log(data)
+            );
+        this.model = new User("","","","","operator");
         this.active = false;
         setTimeout(() => this.active = true, 0);
     }
     ngOnInit() {
-        this.model = new User(" "," ");
+        this.model = new User("","","","","operator");
     }
-    // TODO: Remove this when we're done
-    get diagnostic() { return JSON.stringify(this.model); }
 }
